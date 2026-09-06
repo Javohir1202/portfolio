@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: theme("colors.bg.DEFAULT");
+  color: theme("colors.ink.DEFAULT");
+}
+
+::selection {
+  background-color: theme("colors.accent.DEFAULT");
+  color: theme("colors.bg.DEFAULT");
+}
+
+:focus-visible {
+  outline: 2px solid theme("colors.accent.DEFAULT");
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  background: theme("colors.ink.DEFAULT");
+  color: theme("colors.bg.DEFAULT");
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Lenis owns scroll easing while active — let it, instead of double-animating
+   against the native `scroll-behavior: smooth` above. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Custom cursor: only hide the native one once CustomCursor has confirmed a
+   real mouse (not touch) and no reduced-motion preference — see
+   components/CustomCursor.tsx. Never applied unconditionally in CSS alone,
+   so a cursor is never hidden with nothing drawn to replace it. */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* Mobile nav dropdown: a small entrance so it doesn't just snap into view.
+   Scoped inside the no-preference query so reduced-motion users simply get
+   the panel with no animation, never a class that silently does nothing. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes dropdown-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-dropdown-in {
+    animation: dropdown-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
