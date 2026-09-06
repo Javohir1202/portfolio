@@ -5,6 +5,7 @@ import { FeaturedProjectCard, ProjectCard } from "./ProjectCard";
 import { Reveal } from "./Reveal";
 import { useLocale } from "@/lib/i18n/LanguageContext";
 import { dictionaries } from "@/lib/i18n/dictionaries";
+import { cn } from "@/lib/utils";
 import type { ImageAvailability } from "@/lib/projectImages";
 
 export function ProjectShowcase({ imageAvailability }: { imageAvailability: ImageAvailability }) {
@@ -24,7 +25,7 @@ export function ProjectShowcase({ imageAvailability }: { imageAvailability: Imag
 
         <div className="mt-14 space-y-6">
           <FeaturedProjectCard project={featured} imageAvailability={imageAvailability} />
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className={cn("grid gap-6", rest.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1")}>
             {rest.map((project, i) => (
               <ProjectCard key={project.slug} project={project} index={i} imageAvailability={imageAvailability} />
             ))}

@@ -67,7 +67,7 @@ export function ArchitectureSection() {
             <div className="h-full rounded-2xl border border-border bg-surface/40 p-8">
               <h3 className="flex items-center gap-2 text-lg font-medium text-ink">
                 <span className={cn("h-1.5 w-1.5 rounded-full", palette[1].dot)} aria-hidden />
-                {finance.name} + Finance Bot
+                {finance.name}
               </h3>
               <p className="mt-1 text-sm text-ink-muted">{dict.architecture.oneBackendTwoClients}</p>
               <div className="mt-6">
