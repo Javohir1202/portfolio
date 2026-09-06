@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { site } from "@/data/site";
 import { useLocale } from "@/lib/i18n/LanguageContext";
@@ -16,6 +16,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
+  const headerRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   const navLinks = [
     { href: "/#work", id: "work", label: dict.nav.work },
@@ -62,8 +65,57 @@ export function Navbar() {
     return () => observer.disconnect();
   }, []);
 
+  // Mobile menu: lock body scroll, trap focus inside the header while open,
+  // close on Escape, and return focus to the trigger button on close —
+  // without this, background content stayed scrollable and tabbable behind
+  // an open menu that only visually overlapped it.
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const trigger = triggerRef.current;
+    document.body.style.overflow = "hidden";
+    firstLinkRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !headerRef.current) return;
+
+      // offsetParent is null for display:none elements (among other cases) — filters
+      // out the desktop-only nav links/CTA, which stay in the DOM (just hidden via
+      // `lg:flex`) and would otherwise pollute the first/last boundary this trap uses.
+      const focusable = Array.from(
+        headerRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      trigger?.focus();
+    };
+  }, [open]);
+
   return (
     <header
+      ref={headerRef}
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
         scrolled ? "border-b border-border bg-bg/80 backdrop-blur-md" : "border-b border-transparent"
@@ -80,7 +132,19 @@ export function Navbar() {
           {site.name}<span className="text-accent">.</span>dev
         </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        {/* lg:flex (not md:flex): at 768px the nav's content — logo, links, language
+            switcher, CTA — overflows the available row, and flexbox's default
+            min-width:auto shrinks whichever text CAN still wrap (multi-word labels)
+            before single-word ones budge. That wrapped "What I Build"/"Let's talk" in
+            English and, worse, "Что делаю"/"Обо мне" (Russian) and "Nima qilaman"/"Men
+            haqimda" (Uzbek) — Uzbek still wrapped even with this gap reduced to 0, so a
+            smaller gap alone can't fix every language at 768px. Moving the desktop-nav
+            breakpoint to lg (1024px) instead gives the 768–1023px range the (already
+            fixed) hamburger menu, which has no width constraint to wrap against; lg+ has
+            room to spare for all three languages at the original gap-8. Verified: 768px
+            now shows the hamburger button in all 3 locales, and 1024px fits the full
+            desktop nav single-line in Russian/Uzbek (the longest two) at gap-8. */}
+        <ul className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
             const isActive = active === link.id;
             return (
@@ -100,7 +164,7 @@ export function Navbar() {
           })}
         </ul>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-4 lg:flex">
           <LanguageToggle />
           <Link
             href="/#contact"
@@ -110,9 +174,10 @@ export function Navbar() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-3 lg:hidden">
           <LanguageToggle />
           <button
+            ref={triggerRef}
             type="button"
             className="inline-flex h-9 w-9 items-center justify-center rounded-md text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-expanded={open}
@@ -132,11 +197,19 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div id="mobile-nav" className="animate-dropdown-in border-t border-border bg-bg px-6 pb-6 pt-2 md:hidden">
+        // Full-height overlay (not a short dropdown) so it covers the hero
+        // content behind it cleanly instead of overlapping/clipping it —
+        // combined with the body-scroll-lock effect above, nothing behind
+        // this panel is visible, scrollable, or tabbable while it's open.
+        <div
+          id="mobile-nav"
+          className="animate-dropdown-in fixed inset-x-0 top-16 bottom-0 overflow-y-auto border-t border-border bg-bg px-6 pb-6 pt-4 lg:hidden"
+        >
           <ul className="flex flex-col gap-1">
-            {navLinks.map((link) => (
+            {navLinks.map((link, i) => (
               <li key={link.href}>
                 <Link
+                  ref={i === 0 ? firstLinkRef : undefined}
                   href={link.href}
                   onClick={() => setOpen(false)}
                   className="block rounded-md px-2 py-3 text-base text-ink-muted transition-colors hover:bg-surface hover:text-ink"
