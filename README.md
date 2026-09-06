@@ -49,7 +49,7 @@ avatar (profile photo) or a clearly-labelled "Screenshot coming soon" placeholde
 (project images) — never a broken image or invented content.
 
 - **Profile photo:** drop it at `public/profile/javohir.jpg` (see that folder's README).
-- **Project screenshots:** drop them into `public/projects/<serviceflow|finance-pwa>/`
+- **Project screenshots:** drop them into `public/projects/<serviceflow|finance-pwa|finance-bot>/`
   using the exact filenames listed in that folder's README — `data/projects.ts` already
   points at those paths, so no code changes are needed once the files exist.
 - **Fiverr link:** set `links.fiverr` in [data/site.ts](data/site.ts) once available.
