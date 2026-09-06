@@ -54,13 +54,24 @@ avatar (profile photo) or a clearly-labelled "Screenshot coming soon" placeholde
   points at those paths, so no code changes are needed once the files exist.
 - **Fiverr link:** set `links.fiverr` in [data/site.ts](data/site.ts) once available.
 
-## Before deploying
+## Deployment
 
-1. Set `NEXT_PUBLIC_APP_URL` in the Vercel project's environment variables to the real
-   deployed URL — it drives canonical URLs, `sitemap.xml`, `robots.txt`, and Open Graph tags
-   (see `.env.example`).
-2. Add the profile photo and project screenshots (above).
-3. Add the Fiverr URL once you have it.
+Live at **https://nodirbekov.netlify.app**, hosted on Netlify (auto-deploys from the `main`
+branch of this repo). `netlify.toml` pins the Node version and build command; Netlify's
+Next.js Runtime handles SSR/API routes with no other config needed.
+
+Environment variables (set under Netlify's Site configuration → Environment variables, see
+`.env.example` for what each one does):
+
+- `NEXT_PUBLIC_APP_URL` — the live URL above; drives canonical URLs, `sitemap.xml`,
+  `robots.txt`, and Open Graph tags.
+- `RESEND_API_KEY` — powers the contact form (`app/api/contact/route.ts`). Without a verified
+  sending domain on Resend, its sandbox sender can only deliver to the email address the
+  Resend account itself was created with.
+- `CONTACT_TO_EMAIL` — optional; defaults to `data/site.ts`'s `email` if unset.
+
+A new deploy is required after adding/changing any environment variable — Netlify doesn't
+apply changes to an already-running deploy.
 
 ## Known/accepted trade-off
 
