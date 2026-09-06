@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# No [build.publish] here on purpose — Netlify's Next.js Runtime manages
+# output itself once it detects `next` in package.json; setting a custom
+# publish directory overrides that and breaks SSR/API routes.
