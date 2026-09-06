@@ -109,6 +109,17 @@ function HoverActions({ project, dict }: { project: Project; dict: Dictionary })
           <Send size={16} aria-hidden />
         </a>
       )}
+      {project.links.github && (
+        <a
+          href={project.links.github}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${dict.work.source}: ${project.name}`}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-ink transition-colors hover:border-accent/50 hover:text-accent"
+        >
+          <Github size={16} aria-hidden />
+        </a>
+      )}
     </div>
   );
 }
