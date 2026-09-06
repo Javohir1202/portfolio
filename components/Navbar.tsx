@@ -117,7 +117,11 @@ export function Navbar() {
     <header
       ref={headerRef}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+        // transition-colors alone doesn't cover backdrop-filter, so
+        // backdrop-blur-md was popping in instantly on scroll while only the
+        // background/border color faded — the blur is what actually reads as
+        // "goes black", so it needs to be in the transitioned property list too.
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ease-out",
         scrolled ? "border-b border-border bg-bg/80 backdrop-blur-md" : "border-b border-transparent"
       )}
     >
