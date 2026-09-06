@@ -73,6 +73,33 @@ Environment variables (set under Netlify's Site configuration → Environment va
 A new deploy is required after adding/changing any environment variable — Netlify doesn't
 apply changes to an already-running deploy.
 
+### Verifying a sending domain on Resend (to deliver beyond the sandbox restriction)
+
+Right now `from` in `app/api/contact/route.ts` is Resend's shared sandbox address
+(`onboarding@resend.dev`), which can only deliver to the email your Resend account itself was
+signed up with — fine for testing, not for real visitors emailing in. To lift that restriction:
+
+1. **You need a domain you control DNS for.** This site's `nodirbekov.netlify.app` subdomain
+   doesn't count — Netlify owns that domain, so you can't add DNS records to it. If you don't
+   already own a domain, buy one from any registrar (Cloudflare Registrar, Namecheap, Porkbun,
+   etc. — doesn't need to be the one the site itself is on; a domain bought purely to send email
+   from works fine).
+2. In the Resend dashboard: **Domains → Add Domain**, enter that domain.
+3. Resend shows you a set of DNS records to add (typically an **MX** record and two or three
+   **TXT** records — SPF and DKIM; it may also suggest a **DMARC** TXT record, worth adding too).
+   Add each one exactly as shown, in whatever DNS panel manages that domain (your registrar's
+   own DNS page, or Cloudflare's if you're using it as a DNS provider).
+4. Back in Resend, click **Verify DNS Records**. Propagation is often fast but can take up to
+   ~48 hours; Resend will show a pending/verified status per record.
+5. Once verified, change the `from` line in `app/api/contact/route.ts` from
+   `Portfolio Contact <onboarding@resend.dev>` to `Portfolio Contact <contact@yourdomain.com>`
+   (or any address `@` that verified domain — it doesn't need to be a real inbox, just a valid
+   address on the verified domain).
+6. `CONTACT_TO_EMAIL` can then be any address you want — the sandbox's "only your own signup
+   email" restriction only applies to the shared `onboarding@resend.dev` sender.
+
+Tell me once a domain's verified and I'll make the one-line `from` change.
+
 ## Known/accepted trade-off
 
 `npm audit` reports a few advisories against Next.js 14.2.x itself (Server Actions /

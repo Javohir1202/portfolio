@@ -7,6 +7,48 @@ export const runtime = "nodejs";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_LEN = { name: 200, email: 320, subject: 300, message: 5000 };
 
+/**
+ * Basic per-IP rate limit: max 5 requests/hour. Deliberately simple —
+ * in-memory, module-scoped state. This resets on a cold start and isn't
+ * shared across concurrent function instances, so it's a soft deterrent
+ * against casual abuse/retries, not a hard guarantee under real load or
+ * distributed attack. If that ever matters, swap this for a shared store
+ * (Upstash Redis, Netlify Blobs, etc.) — same call site, new backing store.
+ */
+const RATE_LIMIT = { max: 5, windowMs: 60 * 60 * 1000 };
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT.windowMs;
+  const timestamps = (requestLog.get(ip) ?? []).filter((t) => t > windowStart);
+
+  if (timestamps.length >= RATE_LIMIT.max) {
+    requestLog.set(ip, timestamps);
+    return true;
+  }
+
+  timestamps.push(now);
+  requestLog.set(ip, timestamps);
+
+  // Bound memory: without this, a long-running warm instance hit by many
+  // distinct IPs would accumulate entries forever.
+  if (requestLog.size > 5000) {
+    for (const [key, times] of requestLog) {
+      if (times.every((t) => t <= windowStart)) requestLog.delete(key);
+    }
+  }
+
+  return false;
+}
+
+function getClientIp(request: Request): string {
+  // Netlify (and most CDNs/proxies) set x-forwarded-for as "client, proxy1, proxy2…".
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) return forwardedFor.split(",")[0].trim();
+  return request.headers.get("x-nf-client-connection-ip") || "unknown";
+}
+
 type Payload = {
   name?: unknown;
   email?: unknown;
@@ -21,6 +63,11 @@ function clean(value: unknown, max: number): string {
 }
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
+  }
+
   let body: Payload;
   try {
     body = await request.json();
