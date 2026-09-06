@@ -77,7 +77,7 @@ export const projects: Project[] = [
     },
     links: {
       live: "https://serviceflow-smoky.vercel.app/",
-      // github: "https://github.com/Javohir1202/focusflow", // currently private (confirmed 404 anonymously) — restore once public again
+      github: "https://github.com/Javohir1202/focusflow",
     },
     tech: [
       "Next.js 14 (App Router)",
@@ -242,7 +242,7 @@ export const projects: Project[] = [
     },
     links: {
       live: "https://finance-pwa-eosin.vercel.app/",
-      // github: "https://github.com/Javohir1202/finance-pwa", // currently private (confirmed 404 anonymously) — restore once public again
+      github: "https://github.com/Javohir1202/finance-pwa",
     },
     tech: [
       "React 19",
@@ -418,7 +418,7 @@ export const projects: Project[] = [
     },
     links: {
       telegram: "https://t.me/financepwa_bot",
-      // github: "https://github.com/Javohir1202/finance-pwa", // currently private (confirmed 404 anonymously) — restore once public again
+      github: "https://github.com/Javohir1202/finance-pwa",
     },
     tech: [
       "Telegram Bot API (webhook)",
