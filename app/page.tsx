@@ -5,6 +5,7 @@ import { CapabilitySection } from "@/components/CapabilitySection";
 import { ArchitectureSection } from "@/components/ArchitectureSection";
 import { Process } from "@/components/Process";
 import { ProjectShowcase } from "@/components/ProjectShowcase";
+import { Testimonials } from "@/components/Testimonials";
 import { AboutMe } from "@/components/AboutMe";
 import { Contact } from "@/components/Contact";
 import { getImageAvailability } from "@/lib/projectImages";
@@ -21,6 +22,7 @@ export default function HomePage() {
       <ArchitectureSection />
       <Process />
       <ProjectShowcase imageAvailability={imageAvailability} />
+      <Testimonials />
       <AboutMe />
       <Contact />
     </>

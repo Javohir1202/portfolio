@@ -15,6 +15,7 @@ export type Dictionary = {
   hero: {
     roleLine: string;
     availableBadge: string;
+    responseTime: (hours: number) => string;
     productsShipped: (count: number) => string;
     description: string;
     ctaWork: string;
@@ -78,6 +79,10 @@ export type Dictionary = {
       outcome: string;
     };
   };
+  testimonials: {
+    eyebrow: string;
+    heading: string;
+  };
   aboutMe: {
     eyebrow: string;
     paragraph: string;
@@ -127,6 +132,14 @@ function ruPluralProducts(count: number): string {
   return "продуктов";
 }
 
+function ruPluralHours(count: number): string {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return "час";
+  if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return "часа";
+  return "часов";
+}
+
 const en: Dictionary = {
   nav: {
     work: "Work",
@@ -142,6 +155,7 @@ const en: Dictionary = {
   hero: {
     roleLine: "Software Developer — SaaS, Automation & Business Systems",
     availableBadge: "Available for freelance projects",
+    responseTime: (hours) => `Usually responds within ${hours}h`,
     productsShipped: (count) => `${count} Products Shipped`,
     description:
       "I build software that solves real business problems — full-stack applications, CRM systems, dashboards, and automation, from the database to the interface.",
@@ -269,15 +283,19 @@ const en: Dictionary = {
       outcome: "Outcome",
     },
   },
+  testimonials: {
+    eyebrow: "08 — Testimonials",
+    heading: "What clients say.",
+  },
   aboutMe: {
-    eyebrow: "08 — About Me",
+    eyebrow: "09 — About Me",
     paragraph:
       "I like taking a business problem and turning it into a clean, working application — from the interface and the database to the APIs that connect it to everything else.",
     basedIn: (location) => `Based in ${location}.`,
     location: "Uzbekistan",
   },
   contact: {
-    eyebrow: "09 — Contact",
+    eyebrow: "10 — Contact",
     heading: "Let's build something useful.",
     subtitle: "Have a product, automation or business system in mind?",
     startProject: "Start a Project",
@@ -326,6 +344,7 @@ const ru: Dictionary = {
   hero: {
     roleLine: "Разработчик ПО — SaaS, автоматизация и бизнес-системы",
     availableBadge: "Открыт для фриланс-проектов",
+    responseTime: (hours) => `Обычно отвечаю в течение ${hours} ${ruPluralHours(hours)}`,
     productsShipped: (count) => `${count} ${ruPluralProducts(count)}`,
     description:
       "Я создаю программное обеспечение, которое решает реальные бизнес-задачи — full-stack приложения, CRM-системы, дашборды и автоматизацию, от базы данных до интерфейса.",
@@ -453,15 +472,19 @@ const ru: Dictionary = {
       outcome: "Результат",
     },
   },
+  testimonials: {
+    eyebrow: "08 — Отзывы",
+    heading: "Что говорят клиенты.",
+  },
   aboutMe: {
-    eyebrow: "08 — Обо мне",
+    eyebrow: "09 — Обо мне",
     paragraph:
       "Мне нравится брать бизнес-проблему и превращать её в чистое, работающее приложение — от интерфейса и базы данных до API, которые связывают всё это с остальным миром.",
     basedIn: (location) => `Живу в стране: ${location}.`,
     location: "Узбекистан",
   },
   contact: {
-    eyebrow: "09 — Контакты",
+    eyebrow: "10 — Контакты",
     heading: "Давайте создадим что-то полезное.",
     subtitle: "Есть идея продукта, автоматизации или бизнес-системы?",
     startProject: "Начать проект",
@@ -510,6 +533,7 @@ const uz: Dictionary = {
   hero: {
     roleLine: "Dasturiy taʼminot dasturchisi — SaaS, avtomatlashtirish va biznes tizimlari",
     availableBadge: "Frilans loyihalarga ochiqman",
+    responseTime: (hours) => `Odatda ${hours} soat ichida javob beraman`,
     productsShipped: (count) => `${count} ta loyiha`,
     description:
       "Men haqiqiy biznes muammolarini hal qiluvchi dasturiy taʼminot yarataman — full-stack ilovalar, CRM tizimlari, boshqaruv panellari va avtomatlashtirish, maʼlumotlar bazasidan interfeysgacha.",
@@ -637,15 +661,19 @@ const uz: Dictionary = {
       outcome: "Natija",
     },
   },
+  testimonials: {
+    eyebrow: "08 — Fikrlar",
+    heading: "Mijozlar nima deydi.",
+  },
   aboutMe: {
-    eyebrow: "08 — Men haqimda",
+    eyebrow: "09 — Men haqimda",
     paragraph:
       "Menga biznes muammosini olib, uni toza va ishlaydigan ilovaga aylantirish yoqadi — interfeys va maʼlumotlar bazasidan tortib, uni boshqa hamma narsa bilan bogʻlaydigan API'largacha.",
     basedIn: (location) => `${location}da yashayman.`,
     location: "Oʻzbekiston",
   },
   contact: {
-    eyebrow: "09 — Aloqa",
+    eyebrow: "10 — Aloqa",
     heading: "Keling, foydali narsa yarataylik.",
     subtitle: "Mahsulot, avtomatlashtirish yoki biznes tizimi haqida gʻoyangiz bormi?",
     startProject: "Loyihani boshlash",

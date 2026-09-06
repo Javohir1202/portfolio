@@ -57,6 +57,11 @@ export function HeroClient({ hasPhoto }: { hasPhoto: boolean }) {
               <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 text-xs text-ink-muted">
                 {dict.hero.productsShipped(projects.length)}
               </div>
+              {site.responseTime.enabled && (
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 text-xs text-ink-muted">
+                  {dict.hero.responseTime(site.responseTime.hours)}
+                </div>
+              )}
             </div>
           </Reveal>
         )}

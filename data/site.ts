@@ -7,6 +7,15 @@ export const site = {
   location: "Uzbekistan",
   email: "jvhrndrbkv@gmail.com",
   available: true,
+  /**
+   * Optional "Usually responds within Nh" pill next to the availability
+   * badge in the hero. `enabled: false` until the hours value below is
+   * confirmed accurate — flip it on once it's real, not before.
+   */
+  responseTime: {
+    enabled: false,
+    hours: 24, // PLACEHOLDER — confirm this is actually true before enabling
+  },
   links: {
     github: "https://github.com/Javohir1202",
     linkedin: "https://www.linkedin.com/in/javohir-nodirbekov-604a37433/",
