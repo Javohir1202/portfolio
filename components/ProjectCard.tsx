@@ -5,6 +5,7 @@ import { ArrowUpRight, ExternalLink, Github, Send } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { BrowserFrame } from "./BrowserFrame";
 import { MobileFrame } from "./MobileFrame";
+import { CoverImage } from "./CoverImage";
 import { Reveal } from "./Reveal";
 import { Parallax } from "./Parallax";
 import { useLocale } from "@/lib/i18n/LanguageContext";
@@ -206,7 +207,14 @@ export function ProjectCard({
           data-cursor="project"
           data-cursor-label={dict.work.viewCaseStudy}
         >
-          {isTelegram ? (
+          {project.images[0].isCover ? (
+            <CoverImage
+              image={project.images[0]}
+              hasImage={imageAvailability[`${project.slug}:${project.images[0].key}`]}
+              label={t(project.images[0].label, locale)}
+              comingSoonLabel={dict.work.screenshotComingSoon}
+            />
+          ) : isTelegram ? (
             <MobileFrame
               image={project.images[0]}
               hasImage={imageAvailability[`${project.slug}:${project.images[0].key}`]}

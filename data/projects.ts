@@ -15,6 +15,13 @@ export type ProjectImage = {
    * letterboxes the tall ones. Omit for images with no file yet.
    */
   aspect?: number;
+  /**
+   * True for designed cover/brand artwork rather than a captured UI
+   * screenshot — rendered plainly via CoverImage instead of being wrapped
+   * in BrowserFrame/MobileFrame's device chrome, which would otherwise
+   * misrepresent it as a real screen capture.
+   */
+  isCover?: boolean;
 };
 
 export type Project = {
@@ -421,34 +428,12 @@ export const projects: Project[] = [
     ],
     images: [
       {
-        key: "start",
-        label: { en: "Account Linking", ru: "Привязка аккаунта", uz: "Akkauntni bogʻlash" },
-        src: "/projects/finance-bot/start.png",
-        alt: "Finance Bot /start welcome message and account linking",
-      },
-      {
-        key: "income",
-        label: { en: "Adding Income", ru: "Добавление дохода", uz: "Daromad qoʻshish" },
-        src: "/projects/finance-bot/income.png",
-        alt: "Finance Bot confirming an added income transaction",
-      },
-      {
-        key: "expense",
-        label: { en: "Adding an Expense", ru: "Добавление расхода", uz: "Xarajat qoʻshish" },
-        src: "/projects/finance-bot/expense.png",
-        alt: "Finance Bot parsing a typed expense and confirming it",
-      },
-      {
-        key: "menu",
-        label: { en: "Menu", ru: "Меню", uz: "Menyu" },
-        src: "/projects/finance-bot/menu.png",
-        alt: "Finance Bot reply-keyboard menu",
-      },
-      {
-        key: "today",
-        label: { en: "Today's Summary", ru: "Сводка за сегодня", uz: "Bugungi hisobot" },
-        src: "/projects/finance-bot/today.png",
-        alt: "Finance Bot replying with today's income and expenses",
+        key: "cover",
+        label: { en: "Finance Bot", ru: "Finance Bot", uz: "Finance Bot" },
+        src: "/projects/finance-bot/cover.jpg",
+        alt: "Finance Bot cover artwork",
+        aspect: 1.792,
+        isCover: true,
       },
     ],
     caseStudy: {

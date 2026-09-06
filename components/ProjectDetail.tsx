@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowUpRight, Github, Send } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { BrowserFrame } from "./BrowserFrame";
 import { MobileFrame } from "./MobileFrame";
+import { CoverImage } from "./CoverImage";
 import { Reveal } from "./Reveal";
 import { useLocale } from "@/lib/i18n/LanguageContext";
 import { dictionaries } from "@/lib/i18n/dictionaries";
@@ -103,7 +104,15 @@ export function ProjectDetail({
 
         <Reveal delay={0.1}>
           <div className="mt-14">
-            {isTelegramOnly ? (
+            {project.images[0].isCover ? (
+              <CoverImage
+                image={project.images[0]}
+                hasImage={hasImage(project.images[0].key)}
+                label={t(project.images[0].label, locale)}
+                comingSoonLabel={dict.work.screenshotComingSoon}
+                priority
+              />
+            ) : isTelegramOnly ? (
               <div className="flex flex-wrap justify-center gap-6 rounded-2xl border border-border bg-surface/30 p-10">
                 {project.images.map((img) => (
                   <MobileFrame
