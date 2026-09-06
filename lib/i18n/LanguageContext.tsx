@@ -23,15 +23,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
+    // First-time visitors always start in English — the target audience
+    // (Fiverr/Upwork clients) is primarily English-speaking, so silently
+    // switching to RU/UZ based on browser language risked showing the wrong
+    // language to exactly the visitors this site is for. A returning
+    // visitor's own explicit choice (below, via the EN/RU/UZ switcher) is
+    // still remembered and always wins over this default.
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored && (LOCALES as readonly string[]).includes(stored)) {
         setLocaleState(stored as Locale);
-        return;
       }
-      const browserLang = window.navigator.language.slice(0, 2);
-      if (browserLang === "ru") setLocaleState("ru");
-      else if (browserLang === "uz") setLocaleState("uz");
     } catch {
       // localStorage unavailable (private browsing, etc.) — stay on English.
     }
