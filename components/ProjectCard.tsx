@@ -166,7 +166,6 @@ export function FeaturedProjectCard({
               hasImage={imageAvailability[`${project.slug}:${project.images[0].key}`]}
               label={t(project.images[0].label, locale)}
               comingSoonLabel={dict.work.screenshotComingSoon}
-              priority
               className="w-full"
             />
           </Parallax>
