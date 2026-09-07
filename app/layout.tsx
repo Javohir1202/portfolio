@@ -7,6 +7,7 @@ import { APP_URL } from "@/lib/config";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const inter = Inter({
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
+        <GoogleAnalytics />
         <a href="#main" className="skip-link">
           Skip to content
         </a>

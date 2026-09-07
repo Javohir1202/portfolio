@@ -69,6 +69,10 @@ Environment variables (set under Netlify's Site configuration → Environment va
   sending domain on Resend, its sandbox sender can only deliver to the email address the
   Resend account itself was created with.
 - `CONTACT_TO_EMAIL` — optional; defaults to `data/site.ts`'s `email` if unset.
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` — optional; enables Google Analytics 4
+  (`components/GoogleAnalytics.tsx`) when set. Get one at analytics.google.com
+  (Admin → Data Streams → your web stream → Measurement ID, format `G-XXXXXXXXXX`).
+  Left unset locally on purpose, so local dev traffic never pollutes real analytics data.
 
 A new deploy is required after adding/changing any environment variable — Netlify doesn't
 apply changes to an already-running deploy.
